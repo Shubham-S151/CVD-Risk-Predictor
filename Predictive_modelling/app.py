@@ -1,4 +1,3 @@
-
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -31,9 +30,9 @@ Take Care'''
 def main():
     st.title('CardioLens : Analyzing lifestyle data to predict heart disease risks')
 
-    h = st.text_input('What is Your Height (In cm) ?')
+    h = st.number_input('Enter Height (cm):', min_value=50, max_value=300, step=1)
 
-    w = st.text_input('What is Your Weight (in Kg) ?')
+    w =st.number_input('Enter Weight (kg):', min_value=1, max_value=200, step=1)
 
     gh = (lambda x:0 if x=='Poor' else 1 if x == 'Fair' else 2 if x=='Good' else 3 if x=='Very Good' else 4)\
         (st.selectbox('What About Your General Health ?', ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent']))
@@ -42,7 +41,7 @@ def main():
 
     age = (lambda x: 0 if x < 30 else 1 if x < 50 else 2)(st.slider('Tell us How old are you ? ', min_value = 18, max_value = 100, step = 1))
 
-    bmi = st.text_input('Tell us about Your Body Mass Index ?')
+    bmi = w/(h/100)**2
 
     ckup = (lambda x: 0 if x=='Never' else 1 if x=='Within the past year' else 2 if 
     x=='Within the past 2 years' else 3 if x=='Within the past 5 years' else 4)(st.selectbox("When was the last time you had a check-up?"\
@@ -97,9 +96,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-                                        
-    
-    
-
