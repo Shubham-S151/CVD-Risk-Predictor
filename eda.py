@@ -8,11 +8,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # App Title
-st.title("📊 Load and Visualize Dataset from GitHub")
+st.title("Exploratory Data Analysis")
 
 # Input for GitHub raw file URL
-github_url = st.text_input("🔗 Enter GitHub Raw File URL (.csv, .zip, .gz)", 
-                           "https://raw.githubusercontent.com/your-username/repository/main/data.csv")
+github_url = st.text_input("https://github.com/Shubham-S151/Capstone_Project/blob/main/compressed_data.csv.gz")
 
 # Detect File Type
 def detect_file_type(url):
