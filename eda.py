@@ -101,7 +101,7 @@ if df is not None:
         selected_cols = st.multiselect("Select up to 5 columns:", df.select_dtypes(include=["number"]).columns)
         
         if selected_cols and len(selected_cols) <= 5:
-            fig = sns.pairplot(df[selected_cols])
+            fig = sns.pairplot(df[selected_cols],marker='+)
             st.pyplot(fig)
 
     # Bar Chart for Categorical Variables
