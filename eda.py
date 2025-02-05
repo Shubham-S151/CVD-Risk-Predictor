@@ -8,10 +8,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # App Title
-st.title("Exploratory Data Analysis")
+st.title("📊 Load and Visualize Dataset from GitHub")
 
 # Input for GitHub raw file URL
-github_url = st.text_input("https://github.com/Shubham-S151/Capstone_Project/blob/main/compressed_data.csv.gz")
+github_url = st.text_input("🔗 Enter GitHub Raw File URL (.csv, .zip, .gz)", 
+                           "https://raw.githubusercontent.com/your-username/repository/main/data.csv")
 
 # Detect File Type
 def detect_file_type(url):
@@ -24,25 +25,31 @@ def detect_file_type(url):
     else:
         return None
 
-# Load Dataset
+# Load Dataset with Fix for .gz Error
 def load_data(url, file_type):
     response = requests.get(url)
-    response.raise_for_status()  # Raise error for invalid requests
+    response.raise_for_status()  # Raise an error for invalid requests
+    content_bytes = response.content  # Get the binary content
 
+    # Handle different file formats
     if file_type == "csv":
         return pd.read_csv(io.StringIO(response.text))
     
     elif file_type == "zip":
-        with zipfile.ZipFile(io.BytesIO(response.content), "r") as z:
+        with zipfile.ZipFile(io.BytesIO(content_bytes), "r") as z:
             file_names = z.namelist()  # Get files inside ZIP
             csv_files = [f for f in file_names if f.endswith(".csv")]
             if not csv_files:
-                raise ValueError("No CSV found in ZIP")
+                raise ValueError("No CSV found in ZIP file")
             with z.open(csv_files[0]) as f:
                 return pd.read_csv(f)
     
     elif file_type == "gz":
-        with gzip.GzipFile(fileobj=io.BytesIO(response.content)) as f:
+        # Validate that it's a proper gzip file
+        if content_bytes[:2] != b'\x1f\x8b':  # Gzip files start with magic bytes 0x1f 0x8b
+            raise ValueError("Invalid GZ file. Make sure the GitHub URL is correct and points to a valid `.gz` file.")
+        
+        with gzip.GzipFile(fileobj=io.BytesIO(content_bytes)) as f:
             return pd.read_csv(f)
 
     else:
