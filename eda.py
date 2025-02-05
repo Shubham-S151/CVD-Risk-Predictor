@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import requests
 import io
+import zipfile
+import gzip
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -9,16 +11,17 @@ import matplotlib.pyplot as plt
 st.title("📊 Load and Visualize Dataset from GitHub")
 
 # Input for GitHub raw file URL
-github_url = st.text_input("https://github.com/Shubham-S151/Capstone_Project/blob/main/compressed_data.csv.gz")
+github_url = st.text_input("🔗 Enter GitHub Raw File URL (.csv, .zip, .gz)", 
+                           "https://raw.githubusercontent.com/your-username/repository/main/data.csv")
 
 # Detect File Type
 def detect_file_type(url):
     if url.endswith(".csv"):
         return "csv"
-    elif url.endswith(".xlsx"):
-        return "excel"
-    elif url.endswith(".json"):
-        return "json"
+    elif url.endswith(".zip"):
+        return "zip"
+    elif url.endswith(".gz"):
+        return "gz"
     else:
         return None
 
@@ -29,10 +32,20 @@ def load_data(url, file_type):
 
     if file_type == "csv":
         return pd.read_csv(io.StringIO(response.text))
-    elif file_type == "excel":
-        return pd.read_excel(io.BytesIO(response.content))
-    elif file_type == "json":
-        return pd.read_json(io.StringIO(response.text))
+    
+    elif file_type == "zip":
+        with zipfile.ZipFile(io.BytesIO(response.content), "r") as z:
+            file_names = z.namelist()  # Get files inside ZIP
+            csv_files = [f for f in file_names if f.endswith(".csv")]
+            if not csv_files:
+                raise ValueError("No CSV found in ZIP")
+            with z.open(csv_files[0]) as f:
+                return pd.read_csv(f)
+    
+    elif file_type == "gz":
+        with gzip.GzipFile(fileobj=io.BytesIO(response.content)) as f:
+            return pd.read_csv(f)
+
     else:
         return None
 
@@ -76,6 +89,6 @@ if github_url:
         except Exception as e:
             st.error(f"Error loading file: {e}")
     else:
-        st.warning("⚠️ Unsupported file type. Please upload a CSV, Excel, or JSON file.")
+        st.warning("⚠️ Unsupported file type. Please upload a CSV, ZIP (containing CSV), or GZ file.")
 
 # Run with: `streamlit run app.py`
