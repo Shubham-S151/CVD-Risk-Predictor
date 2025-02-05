@@ -4,10 +4,10 @@ import numpy as np
 import pandas as pd
 import pickle
 
-with open('final_model.pkl', 'rb') as file:
+with open('Predictive_modelling/final_model.pkl', 'rb') as file:
     model = pickle.load(file)
 
-with open('transformer.pkl', 'rb') as file:
+with open('Predictive_modelling/transformer.pkl', 'rb') as file:
     pt = pickle.load(file)
 
 def prediction(input_list):
