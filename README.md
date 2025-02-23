@@ -37,31 +37,15 @@ Cardiovascular diseases (CVD) are among the leading causes of mortality worldwid
 The app uses **logistic regression**, **random forest**, and other classifiers to predict CVD risk. Model performance is evaluated using:  
 - **Accuracy, Precision, Recall, and F1-Score**  
 - **ROC Curve & Feature Importance**  
-
-💡 How to Use
-### **1️⃣ Clone the Repository:**  
-```bash
-git clone https://github.com/Shubham-S151/CVD-Risk-Predictor.git
-cd CVD-Risk-Predictor
-
 ## **💡 How to Use**  
-
 ### **1️⃣ Clone the Repository:**  
-```bash
-git clone https://github.com/Shubham-S151/CVD-Risk-Predictor.git
-cd CVD-Risk-Predictor
-2️⃣ Install Dependencies:
-bash
-Copy
-Edit
-pip install -r requirements.txt
-3️⃣ Run the Streamlit App Locally:
-bash
-Copy
-Edit
-streamlit run Streamlit_Apps/app.py
-4️⃣ Access the Hosted App:
-You can also use the hosted version of the app:
 
-🏥 CVD Risk Prediction App: Click Here
-📊 Exploratory Data Analysis (EDA) Dashboard: Click Here
+`git clone https://github.com/Shubham-S151/CVD-Risk-Predictor.git
+cd CVD-Risk-Predictor`
+
+### **2️⃣ Install Dependencies:**
+#### Copy : 
+`pip install -r requirements.txt`
+### **3️⃣ Run the Streamlit App Locally:**
+#### Copy
+`streamlit run Streamlit_Apps/app.py`
