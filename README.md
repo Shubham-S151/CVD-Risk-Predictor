@@ -3,7 +3,7 @@ A group academic project featuring a **Cardiovascular Disease (CVD) Risk Predict
 
 ## **🔗 Live Links**  
 - 🏥 **CVD Risk Prediction App**: [Click Here](https://cardio-lens.streamlit.app/)  
-- 📊 **Exploratory Data Analysis (EDA) Dashboard**: [Click Here](https://capstone-eda.streamlit.app/)
+- 📊 **Exploratory Data Analysis (EDA) Dashboard**: [Click Here](https://capstone-eda.streamlit.app/) # Currently incomplete
 - 📄 **Final Project Report**: [Click Here](https://github.com/Shubham-S151/CVD-Risk-Predictor/blob/main/Project-%20Final%20Report.pdf) 
 
 ## **📌 Project Overview**  
