@@ -7,7 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load dataset
-df = pd.read_csv("https://raw.github.com/Shubham-S151/Capstone_Project/main/Heart%20Disease%20Data.csv.gz")
+df = pd.read_csv("https://raw.github.com/Shubham-S151/CVD-Risk-Predictor/main/Heart%20Disease%20Data.csv.gz")
 
 st.title("Cardiovascular Disease Analysis")
 
