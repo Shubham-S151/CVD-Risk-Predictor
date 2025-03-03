@@ -37,7 +37,7 @@ def main():
     gh = (lambda x:0 if x=='Poor' else 1 if x == 'Fair' else 2 if x=='Good' else 3 if x=='Very Good' else 4)\
         (st.selectbox('What About Your General Health ?', ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent']))
 
-    bg = (lambda x: 0 if x=='O' else 1 if x=='B' else 2 )(st.selectbox('What is Your Blood Group ?', ['A', 'B', 'O', 'AB']))
+    bg = (lambda x: 0 if x=='O' else 1 if x=='B' else 2 )(st.selectbox('What is Your Blood Group ?', ['A', 'B', 'O']))
 
     age = (lambda x: 0 if x < 30 else 1 if x < 50 else 2)(st.slider('Tell us How old are you ? ', min_value = 18, max_value = 100, step = 1))
 
@@ -53,13 +53,13 @@ def main():
 
     dp = (lambda x: 0 if x=='Non Veg' else 1)(st.selectbox('Tell Us About Your Diet Preference ?', ['Veg', "Non Veg"]))
 
-    gv = st.slider('Rate Your Green Vegetable Consumption (where low is 1 and high is 4)', min_value = 1, max_value = 4, step = 2)
+    gv = st.slider('Rate Your Green Vegetable Consumption (where low is 1 and high is 4)', min_value = 1, max_value = 4, step = 1)
 
-    fr = st.slider('Rate Your Fruit Consumption (where low is 1 and high is 4)', min_value = 1, max_value = 4, step = 2)
+    fr = st.slider('Rate Your Fruit Consumption (where low is 1 and high is 4)', min_value = 1, max_value = 4, step = 1)
 
-    fry = st.slider('Rate Your Fried Food Consumption (where low is 1 and high is 4)', min_value = 1, max_value = 4, step = 2)
+    fry = st.slider('Rate Your Fried Food Consumption (where low is 1 and high is 4)', min_value = 1, max_value = 4, step = 1)
 
-    alco = st.slider('Rate Your Alcohol Consumption (where low is 1 and high is 4)', min_value = 1, max_value = 4, step = 2)
+    alco = st.slider('Rate Your Alcohol Consumption (where low is 1 and high is 4)', min_value = 1, max_value = 4, step = 1)
 
     dep = (lambda x: 0 if x=='No' else 1)(st.selectbox('Are You Feeling Depressed ?', ['Yes', "No"]))
 
