@@ -10,7 +10,7 @@ import plotly.figure_factory as ff
 st.title("📊 Heart Disease Data Analysis (Live from GitHub)")
 
 # Hardcoded GitHub Raw File URL
-GITHUB_URL = "https://raw.github.com/Shubham-S151/Capstone_Project/main/Heart%20Disease%20Data.csv.gz"
+GITHUB_URL = "https://raw.github.com/Shubham-S151/CVD-Risk-Predictor/main/Heart%20Disease%20Data.csv.gz"
 
 # Function to Load Dataset
 @st.cache_data
