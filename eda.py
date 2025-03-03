@@ -3,8 +3,8 @@ import pandas as pd
 import requests
 import io
 import gzip
-import seaborn as sns
-import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.figure_factory as ff
 
 # App Title
 st.title("📊 Heart Disease Data Analysis (Live from GitHub)")
@@ -13,15 +13,16 @@ st.title("📊 Heart Disease Data Analysis (Live from GitHub)")
 GITHUB_URL = "https://raw.github.com/Shubham-S151/Capstone_Project/main/Heart%20Disease%20Data.csv.gz"
 
 # Function to Load Dataset
+@st.cache_data
 def load_data(url):
     try:
         response = requests.get(url, stream=True)
         response.raise_for_status()  # Raise an error for bad requests
-        
+
         # Validate that it's a proper gzip file
         if response.content[:2] != b'\x1f\x8b':  
             raise ValueError("Invalid GZ file. Please check the GitHub URL.")
-        
+
         # Decompress and Read CSV
         with gzip.GzipFile(fileobj=io.BytesIO(response.content)) as f:
             df = pd.read_csv(f)
@@ -40,7 +41,7 @@ df = load_data(GITHUB_URL)
 # Display Data if Successfully Loaded
 if df is not None:
     st.write("### 🔍 Dataset Preview")
-    st.write(df.head())
+    st.dataframe(df.head())
 
     st.write("### 📊 Summary Statistics")
     st.write(df.describe())
@@ -52,70 +53,63 @@ if df is not None:
     st.sidebar.header("📊 Visualization Options")
 
     # Select Visualization Type
-    vis_option = st.sidebar.selectbox("Choose a Visualization", ["Histogram", "Boxplot", "Scatter Plot", "Correlation Heatmap", "Pairplot", "Bar Chart"])
+    vis_option = st.sidebar.selectbox("Choose Analysis Type:", 
+                                      ["Select an option", "Descriptive Analysis", "Univariate Analysis", 
+                                       "Bivariate Analysis", "Multivariate Analysis"])
 
-    # Histogram
-    if vis_option == "Histogram":
+    # Descriptive Analysis
+    if vis_option == "Descriptive Analysis":
         st.write("### 📈 Data Distribution")
         num_cols = df.select_dtypes(include=["number"]).columns
-        selected_col = st.selectbox("Select a column for distribution plot:", num_cols)
-        
-        if selected_col:
-            fig, ax = plt.subplots(figsize=(8, 4))
-            sns.histplot(df[selected_col], kde=True, bins=30, ax=ax)
-            st.pyplot(fig)
+        selected_col = st.selectbox("Select a column:", num_cols)
 
-    # Boxplot
-    elif vis_option == "Boxplot":
-        st.write("### 📦 Boxplot (Detect Outliers)")
+        if selected_col:
+            fig = px.histogram(df, x=selected_col, nbins=30, marginal="box", title=f"Distribution of {selected_col}")
+            st.plotly_chart(fig)
+
+    # Univariate Analysis - Boxplot
+    elif vis_option == "Univariate Analysis":
+        st.write("### 📦 Boxplot (Outliers Detection)")
         num_cols = df.select_dtypes(include=["number"]).columns
-        selected_col = st.selectbox("Select a column for boxplot:", num_cols)
+        selected_col = st.selectbox("Select a column:", num_cols)
 
         if selected_col:
-            fig, ax = plt.subplots(figsize=(8, 4))
-            sns.boxplot(y=df[selected_col], ax=ax)
-            st.pyplot(fig)
+            fig = px.box(df, y=selected_col, title=f"Boxplot of {selected_col}")
+            st.plotly_chart(fig)
 
-    # Scatter Plot
-    elif vis_option == "Scatter Plot":
-        st.write("### 🔎 Scatter Plot (Relationships between variables)")
+    # Bivariate Analysis - Scatter Plot
+    elif vis_option == "Bivariate Analysis":
+        st.write("### 🔎 Scatter Plot (Variable Relationships)")
         num_cols = df.select_dtypes(include=["number"]).columns
         col_x = st.selectbox("Select X-axis variable:", num_cols)
         col_y = st.selectbox("Select Y-axis variable:", num_cols)
 
         if col_x and col_y:
-            fig, ax = plt.subplots(figsize=(8, 4))
-            sns.scatterplot(x=df[col_x], y=df[col_y], ax=ax)
-            st.pyplot(fig)
+            fig = px.scatter(df, x=col_x, y=col_y, title=f"Scatter Plot: {col_x} vs {col_y}")
+            st.plotly_chart(fig)
 
-    # Correlation Heatmap
-    elif vis_option == "Correlation Heatmap":
+    # Multivariate Analysis - Correlation Heatmap
+    elif vis_option == "Multivariate Analysis":
         st.write("### 🔥 Correlation Heatmap")
-        fig, ax = plt.subplots(figsize=(10, 5))
-        sns.heatmap(df.corr(), annot=True, cmap="coolwarm", ax=ax)
-        st.pyplot(fig)
+        corr_matrix = df.corr()
 
-    # Pairplot
-    elif vis_option == "Pairplot":
-        st.write("### 🔗 Pairplot (Variable Relationships)")
-        selected_cols = st.multiselect("Select up to 5 columns:", df.select_dtypes(include=["number"]).columns)
-        
-        if selected_cols and len(selected_cols) <= 5:
-            fig = sns.pairplot(df[selected_cols],markers='+')
-            st.pyplot(fig)
+        fig = px.imshow(corr_matrix, text_auto=True, labels=dict(color="Correlation"),
+                        title="Correlation Matrix Heatmap", color_continuous_scale="RdBu_r")
+        st.plotly_chart(fig)
 
-    # Bar Chart for Categorical Variables
-    elif vis_option == "Bar Chart":
-        st.write("### 📊 Bar Chart (Categorical Variables)")
-        cat_cols = df.select_dtypes(include=["object"]).columns
+    # Categorical Variable Analysis - Bar Chart
+    st.sidebar.subheader("📊 Categorical Variable Analysis")
+    cat_cols = df.select_dtypes(include=["object"]).columns
 
-        if len(cat_cols) > 0:
-            selected_col = st.selectbox("Select a categorical column:", cat_cols)
+    if len(cat_cols) > 0:
+        selected_cat_col = st.sidebar.selectbox("Select a categorical column:", cat_cols)
 
-            if selected_col:
-                fig, ax = plt.subplots(figsize=(8, 4))
-                sns.countplot(x=df[selected_col], ax=ax)
-                plt.xticks(rotation=45)
-                st.pyplot(fig)
-        else:
-            st.warning("No categorical columns available in this dataset.")
+        if selected_cat_col:
+            st.write(f"### 📊 Bar Chart of {selected_cat_col}")
+            fig = px.bar(df[selected_cat_col].value_counts().reset_index(), 
+                         x="index", y=selected_cat_col, 
+                         labels={"index": selected_cat_col, selected_cat_col: "Count"},
+                         title=f"Bar Chart of {selected_cat_col}")
+            st.plotly_chart(fig)
+    else:
+        st.sidebar.warning("No categorical columns available in this dataset.")
