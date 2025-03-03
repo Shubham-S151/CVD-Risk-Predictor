@@ -15,7 +15,7 @@ def prediction(input_list):
 
     pred = model.predict_proba([input_list])[:,1][0]
 
-    if pred > 0.5:
+    if pred > 0.25:
         return f'''You Have More Chances of Getting Diseased
 Your Probability Of Having Cardio Vascular Disease is {round(pred,2)}
 Take Care'''
